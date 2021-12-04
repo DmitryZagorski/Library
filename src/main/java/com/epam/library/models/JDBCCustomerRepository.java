@@ -1,6 +1,5 @@
 package com.epam.library.models;
 
-import com.epam.configurations.Configuration;
 import com.epam.library.connections.ConnectionPoolProvider;
 import com.epam.library.exceptions.CustomerException;
 import com.epam.library.exceptions.CustomerNotFoundException;
@@ -11,7 +10,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
 
 public class JDBCCustomerRepository implements CustomerRepository {
 

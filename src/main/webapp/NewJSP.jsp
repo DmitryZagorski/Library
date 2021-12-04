@@ -12,8 +12,15 @@
 </head>
 <body>
 <h1>
-    <% String s = "I wrote new String"; %>
-    <%= s %>
+    <%@ page import="java.util.Date, com.epam.library.models.Customer, com.epam.library.models.JDBCCustomerRepository"%>
+    <% String s = "The date is: ";
+    Date date = new Date();%>
+    <%= s+date %>
+
+    <% JDBCCustomerRepository instance = JDBCCustomerRepository.getInstance();
+    Customer customer = instance.getCustomerById(82); %>
+
+    <%= customer.toString() %>
 </h1>
 </body>
 </html>

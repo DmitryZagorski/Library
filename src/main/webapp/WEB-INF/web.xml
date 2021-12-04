@@ -15,6 +15,15 @@
         <url-pattern>/first</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>NewJSP</servlet-name>
+        <jsp-file>/NewJSP.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NewJSP</servlet-name>
+        <url-pattern>/newJsp</url-pattern>
+    </servlet-mapping>
+
 
 
 </web-app>
