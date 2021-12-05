@@ -24,6 +24,4 @@
         <url-pattern>/newJsp</url-pattern>
     </servlet-mapping>
 
-
-
 </web-app>

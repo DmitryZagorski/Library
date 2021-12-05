@@ -1,5 +1,6 @@
 package com.epam.library.models;
 
+import com.epam.library.repositories.JDBCCustomerRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -1,12 +1,12 @@
 package com.epam.library.models;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Book {
 
     private int id;
-    private static int ID;
-    private String name;
+    private String title;
     private String author;
     private LocalDate issueDate;
     private String genre;
@@ -14,9 +14,8 @@ public class Book {
     public Book() {
     }
 
-    public Book(String name, String author, LocalDate issueDate, String genre) {
-        this.id = ID++;
-        this.name = name;
+    public Book(String title, String author, LocalDate issueDate, String genre) {
+        this.title = title;
         this.author = author;
         this.issueDate = issueDate;
         this.genre = genre;
@@ -26,8 +25,8 @@ public class Book {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
     public String getAuthor() {
@@ -42,16 +41,12 @@ public class Book {
         return genre;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public static void setID(int ID) {
-        Book.ID = ID;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setAuthor(String author) {
@@ -64,5 +59,33 @@ public class Book {
 
     public void setGenre(String genre) {
         this.genre = genre;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return id == book.id &&
+                Objects.equals(title, book.title) &&
+                Objects.equals(author, book.author) &&
+                Objects.equals(issueDate, book.issueDate) &&
+                Objects.equals(genre, book.genre);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", issueDate=" + issueDate +
+                ", genre='" + genre + '\'' +
+                '}';
     }
 }

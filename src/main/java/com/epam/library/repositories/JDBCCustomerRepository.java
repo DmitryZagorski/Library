@@ -1,14 +1,16 @@
-package com.epam.library.models;
+package com.epam.library.repositories;
 
 import com.epam.library.connections.ConnectionPoolProvider;
 import com.epam.library.exceptions.CustomerException;
 import com.epam.library.exceptions.CustomerNotFoundException;
+import com.epam.library.models.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public class JDBCCustomerRepository implements CustomerRepository {
@@ -51,7 +53,6 @@ public class JDBCCustomerRepository implements CustomerRepository {
     public void removeCustomerById(Integer id) {
         String findCustomer = "select * from customers where id = ".concat(id.toString());
         String removeCustomer = "delete from customers where id = ".concat(id.toString());
-
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(findCustomer)) {
@@ -122,4 +123,42 @@ public class JDBCCustomerRepository implements CustomerRepository {
         customer.setAddress(resultSet.getString("address"));
         return customer;
     }
+
+    @Override
+    public Customer getCustomerByNameAndSurname(String name, String surname) {
+        String getByNameAndSurname = "select * from customers where name = '"+ name +
+                "'  and surname = '"+ surname+"'";
+        try (Connection connection = ConnectionPoolProvider.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(getByNameAndSurname)) {
+            if (resultSet.next()) {
+                Customer customer = getCustomer(resultSet);
+                return customer;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            Log.error("Something wrong during retrieval name " + name +" and surname " + surname, e);
+            throw new CustomerNotFoundException(name, surname, e);
+        }
+    }
+
+    @Override
+    public Collection<Customer> getCustomersByDateOfSignUp(Date fromDate, Date toDate) {
+        String getCustomersBetweenDates = "select * from customers where date_of_sign_up between (fromDate and toDate)";
+        try(Connection connection = ConnectionPoolProvider.getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(getCustomersBetweenDates)) {
+            List<Customer> customersBetweenDates = new ArrayList<>();
+            while (resultSet.next()){
+                customersBetweenDates.add(getCustomer(resultSet));
+            }
+            return customersBetweenDates;
+        } catch (SQLException e) {
+            Log.error("Something wrong during retrieval customers with date of sign up between "+fromDate.toString()+" and " + toDate.toString());
+            throw new CustomerException(e);
+        }
+    }
+
+
 }

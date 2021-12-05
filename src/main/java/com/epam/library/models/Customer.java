@@ -1,28 +1,26 @@
 package com.epam.library.models;
 
 import java.sql.Date;
-import java.util.List;
 import java.util.Objects;
 
 public class Customer {
 
     private int id;
-    private static int ID;
     private String name;
     private String surname;
     private java.util.Date birth;
     private String address;
+    private java.util.Date dateOfSignUp;
 
     public Customer() {
-
     }
 
-    public Customer(String name, String surname, Date birth, String address) {
-        this.id = ID++;
+    public Customer(String name, String surname, Date birth, String address, Date dateOfSignUp) {
         this.name = name;
         this.surname = surname;
         this.birth = birth;
         this.address = address;
+        this.dateOfSignUp = dateOfSignUp;
     }
 
     public int getId() {
@@ -45,12 +43,12 @@ public class Customer {
         return address;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public java.util.Date getDateOfSignUp() {
+        return dateOfSignUp;
     }
 
-    public static void setID(int ID) {
-        Customer.ID = ID;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public void setName(String name) {
@@ -67,6 +65,10 @@ public class Customer {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public void setDateOfSignUp(java.util.Date dateOfSignUp) {
+        this.dateOfSignUp = dateOfSignUp;
     }
 
     @Override
