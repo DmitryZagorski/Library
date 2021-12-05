@@ -43,8 +43,8 @@ public class Customer {
         return address;
     }
 
-    public java.util.Date getDateOfSignUp() {
-        return dateOfSignUp;
+    public Date getDateOfSignUp() {
+        return (Date) dateOfSignUp;
     }
 
     public void setId(Integer id) {

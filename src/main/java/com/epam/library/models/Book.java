@@ -1,5 +1,6 @@
 package com.epam.library.models;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -8,13 +9,13 @@ public class Book {
     private int id;
     private String title;
     private String author;
-    private LocalDate issueDate;
+    private Date issueDate;
     private String genre;
 
     public Book() {
     }
 
-    public Book(String title, String author, LocalDate issueDate, String genre) {
+    public Book(String title, String author, Date issueDate, String genre) {
         this.title = title;
         this.author = author;
         this.issueDate = issueDate;
@@ -33,7 +34,7 @@ public class Book {
         return author;
     }
 
-    public LocalDate getIssueDate() {
+    public Date getIssueDate() {
         return issueDate;
     }
 
@@ -53,7 +54,7 @@ public class Book {
         this.author = author;
     }
 
-    public void setIssueDate(LocalDate issueDate) {
+    public void setIssueDate(Date issueDate) {
         this.issueDate = issueDate;
     }
 

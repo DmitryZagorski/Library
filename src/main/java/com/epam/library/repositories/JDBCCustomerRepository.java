@@ -19,10 +19,6 @@ public class JDBCCustomerRepository implements CustomerRepository {
 
     private static JDBCCustomerRepository instance;
 
-    public JDBCCustomerRepository() {
-
-    }
-
     public static synchronized JDBCCustomerRepository getInstance() {
         if (instance == null) {
             instance = new JDBCCustomerRepository();
@@ -32,13 +28,14 @@ public class JDBCCustomerRepository implements CustomerRepository {
 
     @Override
     public void addCustomer(Customer customer) {
-        String insertNewCustomer = "insert into customers (name, surname, birth, address) values (?,?,?,?)";
+        String insertNewCustomer = "insert into customers (name, surname, birth, address, date_of_sign_up) values (?,?,?,?,?)";
         try (Connection connection = ConnectionPoolProvider.getConnection();
              PreparedStatement prStatement = connection.prepareStatement(insertNewCustomer)) {
             prStatement.setString(1, customer.getName());
             prStatement.setString(2, customer.getSurname());
             prStatement.setDate(3, customer.getBirth());
             prStatement.setString(4, customer.getAddress());
+            prStatement.setDate(5, customer.getDateOfSignUp());
             int result = prStatement.executeUpdate();
             if (result != 1) {
                 throw new CustomerException("Customer was not added!");
@@ -63,7 +60,7 @@ public class JDBCCustomerRepository implements CustomerRepository {
             }
         } catch (SQLException e) {
             Log.error("Something wrong during removing customer by id " + id, e);
-            throw new CustomerException();
+            throw new CustomerException(e);
         }
     }
 
@@ -114,20 +111,10 @@ public class JDBCCustomerRepository implements CustomerRepository {
         }
     }
 
-    private Customer getCustomer(ResultSet resultSet) throws SQLException {
-        Customer customer = new Customer();
-        customer.setId(resultSet.getInt("id"));
-        customer.setName(resultSet.getString("name"));
-        customer.setSurname(resultSet.getString("surname"));
-        customer.setBirth(resultSet.getDate("birth"));
-        customer.setAddress(resultSet.getString("address"));
-        return customer;
-    }
-
     @Override
     public Customer getCustomerByNameAndSurname(String name, String surname) {
-        String getByNameAndSurname = "select * from customers where name = '"+ name +
-                "'  and surname = '"+ surname+"'";
+        String getByNameAndSurname = "select * from customers where name = '" + name +
+                "'  and surname = '" + surname + "'";
         try (Connection connection = ConnectionPoolProvider.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(getByNameAndSurname)) {
@@ -138,7 +125,7 @@ public class JDBCCustomerRepository implements CustomerRepository {
                 return null;
             }
         } catch (SQLException e) {
-            Log.error("Something wrong during retrieval name " + name +" and surname " + surname, e);
+            Log.error("Something wrong during retrieval name " + name + " and surname " + surname, e);
             throw new CustomerNotFoundException(name, surname, e);
         }
     }
@@ -146,16 +133,43 @@ public class JDBCCustomerRepository implements CustomerRepository {
     @Override
     public Collection<Customer> getCustomersByDateOfSignUp(Date fromDate, Date toDate) {
         String getCustomersBetweenDates = "select * from customers where date_of_sign_up between (fromDate and toDate)";
-        try(Connection connection = ConnectionPoolProvider.getConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(getCustomersBetweenDates)) {
+        try (Connection connection = ConnectionPoolProvider.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(getCustomersBetweenDates)) {
             List<Customer> customersBetweenDates = new ArrayList<>();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 customersBetweenDates.add(getCustomer(resultSet));
             }
             return customersBetweenDates;
         } catch (SQLException e) {
-            Log.error("Something wrong during retrieval customers with date of sign up between "+fromDate.toString()+" and " + toDate.toString());
+            Log.error("Something wrong during retrieval customers with date of sign up between " + fromDate.toString() + " and " + toDate.toString());
+            throw new CustomerException(e);
+        }
+    }
+
+    private Customer getCustomer(ResultSet resultSet) throws SQLException {
+        Customer customer = new Customer();
+        customer.setId(resultSet.getInt("id"));
+        customer.setName(resultSet.getString("name"));
+        customer.setSurname(resultSet.getString("surname"));
+        customer.setBirth(resultSet.getDate("birth"));
+        customer.setAddress(resultSet.getString("address"));
+        return customer;
+    }
+
+    public Integer getIdOfOnceCustomerInTableForTest() {
+        String getIdOfCustomer = "select * from customers";
+        try (Connection connection = ConnectionPoolProvider.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(getIdOfCustomer)) {
+            int id;
+            if (resultSet.next()) {
+                id = resultSet.getInt("id");
+                return id;
+            }
+            else return null;
+        } catch (SQLException e) {
+            Log.error("Error during retrieval id ", e);
             throw new CustomerException(e);
         }
     }

@@ -2,18 +2,25 @@ package com.epam.library.repositories;
 
 import com.epam.library.models.Book;
 
-import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Date;
 
 public interface BookRepository {
 
-    void addBook();
+    void addBook(Book book);
 
-    void removeBook();
+    void removeBookById(Integer id);
 
-    Book getById();
+    void removeAllBooks();
 
-    Book getByTitle();
+    Book getBookById(Integer id);
 
+    Collection<Book> getBooksByTitle(String title);
 
+    Collection<Book> getBooksByAuthor(String author);
+
+    Collection<Book> getBooksByDateOfIssue(Date dateOfIssue);
+
+    Collection<Book> getAllBooks();
 
 }

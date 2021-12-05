@@ -21,5 +21,7 @@ public interface CustomerRepository {
 
     Collection<Customer> getAllCustomers();
 
+    Integer getIdOfOnceCustomerInTableForTest();
+
 
 }
